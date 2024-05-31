@@ -8,6 +8,7 @@ export default function Compose() {
   const log = () => {
     if (editorRef.current) {
       console.log(editorRef.current.getContent());
+      
     }
   }
   return (

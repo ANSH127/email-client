@@ -11,6 +11,7 @@ import Inbox from "./pages/Inbox";
 import Sent from "./pages/Sent";
 import Trash from "./pages/Trash";
 import Compose from "./pages/Compose";
+import ViewMail from "./pages/ViewMail";
 
 function App() {
   
@@ -25,6 +26,7 @@ function App() {
         <Route path="/sent" element={<Sent />} />
         <Route path="/trash" element={<Trash />} />
         <Route path="/compose" element={<Compose />} />
+        <Route path="/viewmail/:id" element={<ViewMail />} />
       </Routes>
       
     </Router>

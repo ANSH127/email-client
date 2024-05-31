@@ -32,6 +32,18 @@ export default function Sidebar() {
                 </span>
               </a>
             </div>
+
+            <div className="flex items-center">
+              <div className="flex items-center ms-3">
+                
+                <button
+                  type="button"
+                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                  Login
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </nav>
@@ -48,7 +60,6 @@ export default function Sidebar() {
                 to="/compose"
                 className={`flex items-center p-2 group hover:text-blue-500 ${
                   location.pathname === "/compose" ? "text-blue-500" : ""
-                
                 }`}
               >
                 <PencilSquareIcon className="w-6 h-6" />
