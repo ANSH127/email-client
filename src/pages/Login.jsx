@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import loginImage from "../assets/images/login.png";
 import GoogleIcon from "../assets/images/googleIcon.png";
 import Loadar from "../components/Loadar";
@@ -7,6 +7,7 @@ import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, getAdd
 import {auth} from '../config/firebase'
 
 export default function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [loading, setLoading] = React.useState(false);
@@ -27,7 +28,7 @@ export default function Login() {
           alert('Login successfull')
           setEmail('')
           setPassword('')
-          window.location.href = '/'
+          navigate('/')
         }
         else {
           alert('Please verify your email')
@@ -60,7 +61,7 @@ export default function Login() {
       }
       localStorage.setItem('user', JSON.stringify(user))
       // toast.success('Login successfull')
-      window.location.href = '/'
+      navigate('/')
     } catch (error) {
       console.log(error)
       // toast.error('Error signing in')

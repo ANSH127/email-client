@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import SignUpImage from "../assets/images/signup.png";
 import GoogleIcon from "../assets/images/googleIcon.png";
 
@@ -10,12 +10,14 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   getAdditionalUserInfo,
+  updateProfile
 } from "firebase/auth";
 
 import { auth } from "../config/firebase";
 import Loadar from "../components/Loadar";
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const [loading, setLoading] = React.useState(false);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -36,6 +38,13 @@ export default function SignUp() {
           email,
           password
         );
+
+        await updateProfile(userCredential.user, {
+          displayName: Name
+        });
+
+
+
         const user = userCredential.user;
         await sendEmailVerification(user);
 
@@ -43,6 +52,7 @@ export default function SignUp() {
         setEmail("");
         setPassword("");
         setName("");
+        navigate("/login");
       } catch (error) {
         console.log(error);
         alert("Error signing up");
@@ -71,7 +81,7 @@ export default function SignUp() {
         }
         localStorage.setItem('user', JSON.stringify(user))
         // toast.success('Login successfull')
-        window.location.href = '/'
+        navigate('/')
     } catch (error) {
         console.log(error)
         // toast.error('Error signing in')

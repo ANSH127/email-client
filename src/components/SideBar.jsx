@@ -5,22 +5,25 @@ import {
   PencilSquareIcon,
 } from "@heroicons/react/24/outline";
 
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 
 import { useLocation } from "react-router-dom";
 
-import {auth} from '../config/firebase'
+import { auth } from "../config/firebase";
 import { signOut } from "firebase/auth";
 
-export default function Sidebar() {
-  const user = localStorage.getItem("user");
-  const location = useLocation();
+import Avatar from "../assets/images/Avatar.jpg";
+import SadFace from "../assets/images/sad-face2.png";
 
+export default function Sidebar() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("user");
     signOut(auth);
-    window.location.reload();
+    navigate("/login");
   };
 
   return (
@@ -46,32 +49,77 @@ export default function Sidebar() {
               </a>
             </div>
 
-            <div className="flex items-center">
-              <div className="flex items-center ms-3 gap-2">
-                {!user ? (
-                  <>
-                    <Link
-                      to={"/login"}
-                      className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                    >
-                      Login
-                    </Link>
 
-                    <Link
-                      to={"/signup"}
-                      className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                    >
-                      Sign Up
-                    </Link>
-                  </>
-                ) : (
+            <div className="flex items-center">
+              <div className="flex items-center ms-3">
+                <div>
                   <button
-                    onClick={handleLogout}
-                    className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    type="button"
+                    className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 "
+                    aria-expanded="false"
+                    data-dropdown-toggle="dropdown-user"
                   >
-                    Logout
+                    <span className="sr-only">Open user menu</span>
+                    <img
+                      className="w-8 h-8 rounded-full"
+                      src={user ? Avatar : SadFace}
+                      alt="user photo"
+                    />
                   </button>
-                )}
+                </div>
+                <div
+                  className="z-50 hidden my-4 text-base list-none bg-black divide-y divide-gray-100 rounded shadow"
+                  id="dropdown-user"
+                >
+                  <div className="px-4 py-3" role="none">
+                    <p
+                      className="text-sm text-gray-900 dark:text-white"
+                      role="none"
+                    >
+                      {user?.displayName}
+                    </p>
+                    <p
+                      className="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
+                      role="none"
+                    >
+                      {user?.email}
+                    </p>
+                  </div>
+                  <ul className="py-1" role="none">
+                    { !user ?
+                      <>
+                        <li>
+                          <Link
+                            to="/login"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                            role="menuitem"
+                          >
+                            Login
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/signup"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                            role="menuitem"
+                          >
+                            SignUp
+                          </Link>
+                        </li>
+                      </>
+                      :
+                      <li>
+                        <button
+                          onClick={handleLogout}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                          role="menuitem"
+                        >
+                          Sign out
+                        </button>
+                      </li>
+                    }
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
