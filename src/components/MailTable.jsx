@@ -12,19 +12,27 @@ export default function MailTable({ mail}) {
         className="bg-white border-b text-black  cursor-pointer  
         hover:bg-gray-100 px-6 py-4 grid grid-cols-10 gap-4"
       >
-        <div className="font-bold text-sm text-gray-900 whitespace-nowrap col-span-4 sm:col-span-3">
+        <div className={`${
+          !isSent && mail?.read ? " font-semibold" : "font-bold"
+        } text-sm text-gray-900 whitespace-nowrap col-span-4 sm:col-span-3`}>
             {
                 isSent ? "To:"+mail?.recipient : "From:"+mail?.sender
 
             }
         </div>
-        <div className="font-semibold col-span-4 sm:col-span-5">
+        <div className={`${
+          !isSent && mail?.read ? " font-semibold" : "font-bold"
+        } text-sm text-gray-900
+        } col-span-4 sm:col-span-5`}>
             {
               mail?.subject?.length < 50 ? mail?.subject :
               mail?.subject?.slice(0, 50)+"..."
             }
         </div>
-        <div className="font-semibold col-span-2">
+        <div className={`${
+          !isSent && mail?.read ? " font-semibold" : "font-bold"
+        } text-sm
+        } col-span-2`}>
             {formatDistance(new Date(mail?.createdAt), new Date(), { addSuffix: true })}
 
         </div>

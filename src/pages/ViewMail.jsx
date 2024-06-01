@@ -23,6 +23,8 @@ export default function ViewMail() {
       // console.log(querySnapshot.data());
 
       setData(querySnapshot.data());
+
+      updateRead( querySnapshot.data().recipient,querySnapshot.data().read);
     } catch (error) {
       console.log("Error getting documents: ", error);
     }
@@ -66,6 +68,21 @@ export default function ViewMail() {
       setLoading2(false);
     }
   };
+
+  const updateRead = async (recipient,read) => {
+
+
+    if (read) return;
+    if(recipient !== useremail) return;
+    try {
+      const q = doc(mailRef, id);
+      await updateDoc(q, {
+        read: true,
+      });
+    } catch (error) {
+      console.log("Error updating read status: ", error);
+    }
+  }
 
   useEffect(() => {
     fetchMail();

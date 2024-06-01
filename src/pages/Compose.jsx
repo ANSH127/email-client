@@ -44,7 +44,8 @@ export default function Compose() {
           message: editorRef.current.getContent(),
           createdAt: new Date().toISOString(),
           sender: auth.currentUser.email,
-          trash:false
+          trash:false,
+          read:false,
         });
         alert("Email sent successfully");
         setRecipient("");
