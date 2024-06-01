@@ -52,6 +52,8 @@ export default function ViewMail() {
 
   useEffect(() => {
     fetchMail();
+
+    // eslint-disable-next-line
   }, []);
 
   return (

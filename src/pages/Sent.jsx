@@ -3,8 +3,11 @@ import { mailRef } from "../config/firebase";
 import { useEffect, useState } from "react";
 import MailTable from "../components/MailTable";
 
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 export default function Sent() {
   const [mails, setMails] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchSentMails = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -28,6 +31,9 @@ export default function Sent() {
     } catch (error) {
       console.log("Error getting documents: ", error);
     }
+    finally{
+      setLoading(false)
+    }
   };
 
   useEffect(() => {
@@ -37,17 +43,21 @@ export default function Sent() {
   return (
     <div className="p-4 sm:ml-64">
       <div className="p-4 border-2 shadow-md border-gray-200  rounded-lg mt-14">
-        <div
+        {
+          loading ? <Skeleton count={11} height={40} /> :
+          <div
           className="overflow-x-auto  overflow-y-auto "
           style={{
             height: "100vh",
             paddingBottom: "100px",
           }}
         >
+
+          {mails.length === 0 && <div className="text-center text-2xl text-gray-400 mt-20">No mails found</div>}
           {mails.map((mail) => (
             <MailTable mail={mail} key={mail.id} isSent={true} />
           ))}
-        </div>
+        </div>}
       </div>
     </div>
   );
