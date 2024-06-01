@@ -8,6 +8,10 @@ import {
 import { Link } from "react-router-dom";
 
 import { useLocation } from "react-router-dom";
+
+import {auth} from '../config/firebase'
+import { signOut } from "firebase/auth";
+
 export default function Sidebar() {
   const user = localStorage.getItem("user");
   const location = useLocation();
@@ -15,6 +19,7 @@ export default function Sidebar() {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    signOut(auth);
     window.location.reload();
   };
 

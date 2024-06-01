@@ -1,13 +1,65 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
-import parse from 'html-react-parser';
+import { TrashIcon,ArrowPathIcon } from "@heroicons/react/24/outline";
+import parse from "html-react-parser";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getDoc, doc ,updateDoc} from "firebase/firestore";
+import { mailRef } from "../config/firebase";
+import { formatDistance } from "date-fns";
+
 
 export default function ViewMail() {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [data, setData] = useState(null);
+  const useremail = JSON.parse(localStorage.getItem("user"))?.email;
+  const fetchMail = async () => {
+    try {
+      const q = doc(mailRef, id);
+      const querySnapshot = await getDoc(q);
+      // console.log(querySnapshot.data());
+
+      setData(querySnapshot.data());
+    } catch (error) {
+      console.log("Error getting documents: ", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const q = doc(mailRef, id);
+      await updateDoc(q, {
+        trash: true,
+      });
+      alert("Email deleted successfully");
+      navigate("/inbox");
+    } catch (error) {
+      console.log("Error deleting email: ", error);
+    }
+  }
+
+  const handleRestore = async () => {
+    try {
+      const q = doc(mailRef, id);
+      await updateDoc(q, {
+        trash: false,
+      });
+      alert("Email restored successfully");
+      navigate("/trash");
+    } catch (error) {
+      console.log("Error deleting email: ", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchMail();
+  }, []);
+
   return (
     <div className="p-4 sm:ml-64">
-      <div className="p-4  shadow-md  rounded-lg mt-14">
-        <h1 className=" font-semibold text-xl">
-          Your MongoDB Atlas M0 cluster will be automatically paused in 7 days
-        </h1>
+      {
+      data &&
+        <div className="p-4  shadow-md  rounded-lg mt-14">
+        <h1 className=" font-semibold text-xl">{data?.subject}</h1>
 
         <div className="flex justify-between mt-4 ">
           <div className="flex space-x-4 justify-between w-full">
@@ -18,28 +70,32 @@ export default function ViewMail() {
                 className="w-8 h-8 rounded-full"
               />
               <p className="text-gray-500">MongoDB Atlas</p>
-              <p className="text-gray-500">&lt;mongodb-atlas@mongodb.com&gt;</p>
+              <p className="text-gray-500">
+                &lt;
+                {data?.recipient === useremail ? data?.sender : data?.recipient}
+                &gt;
+              </p>
             </div>
             <div className=" flex items-center space-x-2">
               {/* // time  */}
-              <p className="text-gray-500">21:44</p>
+              <p className="text-gray-500">
+                {formatDistance(new Date(data?.createdAt), new Date(), {
+                  addSuffix: true,
+                })}
+              </p>
               {/* // trash icon */}
-              <TrashIcon className="h-6 w-6 text-red-500" />
+              <TrashIcon className="h-6 w-6 text-red-500" onClick={handleDelete} />
+              {
+                data?.trash &&
+                <ArrowPathIcon className="h-6 w-6 text-blue-500" onClick={handleRestore} />}
             </div>
           </div>
         </div>
 
         <div className="mt-4 bg-gray-100 p-4 rounded-lg">
-          <div className="text-gray-500">
-            {
-                parse(`<h1 style="text-align: center;"><span style="color: #e03e2d;"><strong>Intoduction</strong></span></h1>
-                <p>&nbsp;</p>
-                <p><span><strong>The&nbsp;<a title="Siege of Gu&icirc;nes (1352)" href="https://en.wikipedia.org/wiki/Siege_of_Gu%C3%AEnes_(1352)">siege of Gu&icirc;nes</a>&nbsp;took place from May to July&nbsp;1352 when a French army under&nbsp;<a title="Geoffroi de Charny" href="https://en.wikipedia.org/wiki/Geoffroi_de_Charny">Geoffrey de Charny</a>&nbsp;unsuccessfully attempted to recapture the French castle&nbsp;<em>(pictured)</em>&nbsp;at&nbsp;<a title="Gu&icirc;nes" href="https://en.wikipedia.org/wiki/Gu%C3%AEnes">Gu&icirc;nes</a>&nbsp;which had been seized by the English the previous January. The siege was part of the&nbsp;<a title="Hundred Years' War" href="https://en.wikipedia.org/wiki/Hundred_Years%27_War">Hundred Years' War</a>&nbsp;and took place during the uneasy and ill-kept&nbsp;<a title="Truce of Calais" href="https://en.wikipedia.org/wiki/Truce_of_Calais">truce of Calais</a>. The strongly fortified castle had been taken by the English during a period of nominal truce and the English king,&nbsp;<a title="Edward III of England" href="https://en.wikipedia.org/wiki/Edward_III_of_England">Edward&nbsp;III</a>, decided to keep it. Charny led 4,500 men and retook the town but was unable to either recapture or&nbsp;<a title="Blockade" href="https://en.wikipedia.org/wiki/Blockade">blockade</a> the castle. After two months of fierce fighting, a large English night attack on the French camp inflicted a heavy defeat and the French withdrew.</strong></span></p>`)
-            }
-            
-          </div>
+          <div className="text-gray-500">{parse(`${data?.message}`)}</div>
         </div>
-      </div>
+      </div>}
     </div>
   );
 }

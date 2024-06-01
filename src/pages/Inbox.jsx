@@ -1,225 +1,51 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+import { getDocs, where, query, orderBy } from "firebase/firestore";
+import { mailRef } from "../config/firebase";
+import { useEffect, useState } from "react";
+import MailTable from "../components/MailTable";
 export default function Inbox() {
+  const [mails, setMails] = useState([]);
+
+  const fetchMails = async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const email = user?.email;
+
+    try {
+      const q = query(
+        mailRef,
+        where("recipient", "==", email),
+        where("trash", "==", false),
+        orderBy("createdAt", "desc")
+      );
+      const querySnapshot = await getDocs(q);
+      let temp = [];
+      querySnapshot.forEach((doc) => {
+        temp.push({ ...doc.data(), id: doc.id });
+      });
+
+      // console.log(temp);
+      setMails(temp);
+    } catch (error) {
+      console.log("Error getting documents: ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMails();
+  }, []);
+
   return (
     <div className="p-4 sm:ml-64">
       <div className="p-4 border-2 shadow-md border-gray-200  rounded-lg mt-14">
-        <div className="overflow-x-auto  overflow-y-auto "
-        style={{
-          height: "100vh",
-          paddingBottom: "100px",
-        }}
+        <div
+          className="overflow-x-auto  overflow-y-auto "
+          style={{
+            height: "100vh",
+            paddingBottom: "100px",
+          }}
         >
-          <Link to="/viewmail/345">
-            <div
-              className="bg-white border-b text-black  cursor-pointer  
-                hover:bg-gray-100 px-6 py-4 grid grid-cols-10 gap-4"
-            >
-              <div className="font-bold text-gray-900 whitespace-nowrap col-span-4 sm:col-span-2">
-                MongoDB Atlas
-              </div>
-              <div className="font-semibold col-span-4 sm:col-span-6">
-                Your MangoDB Atlas cluster is now available on the free tier..
-              </div>
-              <div className="font-semibold">21:44</div>
-              <div>
-                <TrashIcon
-                  data-tooltip-target="tooltip-dark"
-                  className="h-6 w-6 text-red-500 trashIcon"
-                />
-              </div>
-            </div>
-          </Link><Link to="/viewmail/345">
-            <div
-              className="bg-white border-b text-black  cursor-pointer  
-                hover:bg-gray-100 px-6 py-4 grid grid-cols-10 gap-4"
-            >
-              <div className="font-bold text-gray-900 whitespace-nowrap col-span-4 sm:col-span-2">
-                MongoDB Atlas
-              </div>
-              <div className="font-semibold col-span-4 sm:col-span-6">
-                Your MangoDB Atlas cluster is now available on the free tier..
-              </div>
-              <div className="font-semibold">21:44</div>
-              <div>
-                <TrashIcon
-                  data-tooltip-target="tooltip-dark"
-                  className="h-6 w-6 text-red-500 trashIcon"
-                />
-              </div>
-            </div>
-          </Link><Link to="/viewmail/345">
-            <div
-              className="bg-white border-b text-black  cursor-pointer  
-                hover:bg-gray-100 px-6 py-4 grid grid-cols-10 gap-4"
-            >
-              <div className="font-bold text-gray-900 whitespace-nowrap col-span-4 sm:col-span-2">
-                MongoDB Atlas
-              </div>
-              <div className="font-semibold col-span-4 sm:col-span-6">
-                Your MangoDB Atlas cluster is now available on the free tier..
-              </div>
-              <div className="font-semibold">21:44</div>
-              <div>
-                <TrashIcon
-                  data-tooltip-target="tooltip-dark"
-                  className="h-6 w-6 text-red-500 trashIcon"
-                />
-              </div>
-            </div>
-          </Link><Link to="/viewmail/345">
-            <div
-              className="bg-white border-b text-black  cursor-pointer  
-                hover:bg-gray-100 px-6 py-4 grid grid-cols-10 gap-4"
-            >
-              <div className="font-bold text-gray-900 whitespace-nowrap col-span-4 sm:col-span-2">
-                MongoDB Atlas
-              </div>
-              <div className="font-semibold col-span-4 sm:col-span-6">
-                Your MangoDB Atlas cluster is now available on the free tier..
-              </div>
-              <div className="font-semibold">21:44</div>
-              <div>
-                <TrashIcon
-                  data-tooltip-target="tooltip-dark"
-                  className="h-6 w-6 text-red-500 trashIcon"
-                />
-              </div>
-            </div>
-          </Link><Link to="/viewmail/345">
-            <div
-              className="bg-white border-b text-black  cursor-pointer  
-                hover:bg-gray-100 px-6 py-4 grid grid-cols-10 gap-4"
-            >
-              <div className="font-bold text-gray-900 whitespace-nowrap col-span-4 sm:col-span-2">
-                MongoDB Atlas
-              </div>
-              <div className="font-semibold col-span-4 sm:col-span-6">
-                Your MangoDB Atlas cluster is now available on the free tier..
-              </div>
-              <div className="font-semibold">21:44</div>
-              <div>
-                <TrashIcon
-                  data-tooltip-target="tooltip-dark"
-                  className="h-6 w-6 text-red-500 trashIcon"
-                />
-              </div>
-            </div>
-          </Link><Link to="/viewmail/345">
-            <div
-              className="bg-white border-b text-black  cursor-pointer  
-                hover:bg-gray-100 px-6 py-4 grid grid-cols-10 gap-4"
-            >
-              <div className="font-bold text-gray-900 whitespace-nowrap col-span-4 sm:col-span-2">
-                MongoDB Atlas
-              </div>
-              <div className="font-semibold col-span-4 sm:col-span-6">
-                Your MangoDB Atlas cluster is now available on the free tier..
-              </div>
-              <div className="font-semibold">21:44</div>
-              <div>
-                <TrashIcon
-                  data-tooltip-target="tooltip-dark"
-                  className="h-6 w-6 text-red-500 trashIcon"
-                />
-              </div>
-            </div>
-          </Link><Link to="/viewmail/345">
-            <div
-              className="bg-white border-b text-black  cursor-pointer  
-                hover:bg-gray-100 px-6 py-4 grid grid-cols-10 gap-4"
-            >
-              <div className="font-bold text-gray-900 whitespace-nowrap col-span-4 sm:col-span-2">
-                MongoDB Atlas
-              </div>
-              <div className="font-semibold col-span-4 sm:col-span-6">
-                Your MangoDB Atlas cluster is now available on the free tier..
-              </div>
-              <div className="font-semibold">21:44</div>
-              <div>
-                <TrashIcon
-                  data-tooltip-target="tooltip-dark"
-                  className="h-6 w-6 text-red-500 trashIcon"
-                />
-              </div>
-            </div>
-          </Link><Link to="/viewmail/345">
-            <div
-              className="bg-white border-b text-black  cursor-pointer  
-                hover:bg-gray-100 px-6 py-4 grid grid-cols-10 gap-4"
-            >
-              <div className="font-bold text-gray-900 whitespace-nowrap col-span-4 sm:col-span-2">
-                MongoDB Atlas
-              </div>
-              <div className="font-semibold col-span-4 sm:col-span-6">
-                Your MangoDB Atlas cluster is now available on the free tier..
-              </div>
-              <div className="font-semibold">21:44</div>
-              <div>
-                <TrashIcon
-                  data-tooltip-target="tooltip-dark"
-                  className="h-6 w-6 text-red-500 trashIcon"
-                />
-              </div>
-            </div>
-          </Link><Link to="/viewmail/345">
-            <div
-              className="bg-white border-b text-black  cursor-pointer  
-                hover:bg-gray-100 px-6 py-4 grid grid-cols-10 gap-4"
-            >
-              <div className="font-bold text-gray-900 whitespace-nowrap col-span-4 sm:col-span-2">
-                MongoDB Atlas
-              </div>
-              <div className="font-semibold col-span-4 sm:col-span-6">
-                Your MangoDB Atlas cluster is now available on the free tier..
-              </div>
-              <div className="font-semibold">21:44</div>
-              <div>
-                <TrashIcon
-                  data-tooltip-target="tooltip-dark"
-                  className="h-6 w-6 text-red-500 trashIcon"
-                />
-              </div>
-            </div>
-          </Link><Link to="/viewmail/345">
-            <div
-              className="bg-white border-b text-black  cursor-pointer  
-                hover:bg-gray-100 px-6 py-4 grid grid-cols-10 gap-4"
-            >
-              <div className="font-bold text-gray-900 whitespace-nowrap col-span-4 sm:col-span-2">
-                MongoDB Atlas
-              </div>
-              <div className="font-semibold col-span-4 sm:col-span-6">
-                Your MangoDB Atlas cluster is now available on the free tier..
-              </div>
-              <div className="font-semibold">21:44</div>
-              <div>
-                <TrashIcon
-                  data-tooltip-target="tooltip-dark"
-                  className="h-6 w-6 text-red-500 trashIcon"
-                />
-              </div>
-            </div>
-          </Link><Link to="/viewmail/345">
-            <div
-              className="bg-white border-b text-black  cursor-pointer  
-                hover:bg-gray-100 px-6 py-4 grid grid-cols-10 gap-4"
-            >
-              <div className="font-bold text-gray-900 whitespace-nowrap col-span-4 sm:col-span-2">
-                MongoDB Atlas
-              </div>
-              <div className="font-semibold col-span-4 sm:col-span-6">
-                Your MangoDB Atlas cluster is now available on the free tier..
-              </div>
-              <div className="font-semibold">21:44</div>
-              <div>
-                <TrashIcon
-                  data-tooltip-target="tooltip-dark"
-                  className="h-6 w-6 text-red-500 trashIcon"
-                />
-              </div>
-            </div>
-          </Link>
+          {mails.map((mail) => (
+            <MailTable mail={mail} key={mail.id} />
+          ))}
         </div>
       </div>
     </div>
