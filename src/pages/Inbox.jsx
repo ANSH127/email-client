@@ -4,14 +4,22 @@ import { useEffect, useState } from "react";
 import MailTable from "../components/MailTable";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { useNavigate } from "react-router-dom";
 
 export default function Inbox() {
   const [mails, setMails] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchMails = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
     const email = user?.email;
+
+    if (!email) {
+      alert("Please login to continue");
+      navigate("/login");
+      return;
+    }
 
     try {
       const q = query(
